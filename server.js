@@ -40,5 +40,11 @@ app.post('/stock', function(req, res) {
 
 // delete a stock from the array
 app.delete('stock/[symbol]', function(req, res) {
+	if(tickers.length <= req.params.symbol) {
+		res.statusCode = 404;
+		return res.send('Error 404: No symbol found');
+	}
 
+	tickers.splice(req.params.symbol, 1);
+	res.send(req.params.symbol + 'sucessfully deleted');
 });
