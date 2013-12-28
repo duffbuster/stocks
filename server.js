@@ -69,3 +69,5 @@ app.delete('stock/[symbol]', function(req, res) {
 
 	
 });
+
+app.listen(process.end.PORT || 3413);
