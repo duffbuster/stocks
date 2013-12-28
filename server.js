@@ -10,8 +10,31 @@ var tickers = [
 
 app.use(express.bodyParser());
 
-// /stock
+// /stock: lists all stock prices (from array)
+app.get('/stock', function(req, res) {
 
-// /stock/[symbol]
+});
 
-// /stock/random
+// /stock/[symbol]: gets current price for [symbol] (from array)
+app.get('/stock/[symbol]', function(req, res) {
+
+});
+
+// /stock/random: lists price from a random stock (from array)
+app.get('/stock/random', function(req, res) {
+
+});
+
+// add a stock to the array
+app.post('/stock', function(req, res) {
+	if(!req.body.hasOwnProperty('symbol') || !req.body.hasOwnProperty('name')) {
+    res.statusCode = 400;
+    return res.send('Error 400: Post syntax incorrect.');
+  }
+  
+});
+
+// delete a stock from the array
+app.delete('stock/[symbol]', function(req, res) {
+
+});
