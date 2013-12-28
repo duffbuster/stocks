@@ -18,8 +18,9 @@ app.get('/stock', function(req, res) {
 
 // /stock/[symbol]: gets current price for [symbol] (from array)
 app.get('/stock/[symbol]', function(req, res) {
-	var s = req.body.symbol;
-	tickers.forEach(function() {
+	//var s = req.body.symbol;
+	res.send('hello world');
+	/*tickers.forEach(function() {
 		if(tickers.symbol === s) {
 			return res.json(tickers.indexOf(s));
 		}
@@ -27,7 +28,7 @@ app.get('/stock/[symbol]', function(req, res) {
 			res.statusCode = 404;
 			return res.send('Error 404: Symbol not found');
 		}
-	});
+	});*/
 
 	
 });
