@@ -31,7 +31,11 @@ app.post('/stock', function(req, res) {
     res.statusCode = 400;
     return res.send('Error 400: Post syntax incorrect.');
   }
-  
+
+  var newStock = { symbol : req.body.symbol, name : req.body.name };
+
+  tickers.push(newStock);
+  res.send('New stock added!');
 });
 
 // delete a stock from the array
