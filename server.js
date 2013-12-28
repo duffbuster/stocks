@@ -17,58 +17,58 @@ app.get('/stock', function(req, res) {
 });
 
 // /stock/[symbol]: gets current price for [symbol] (from array)
-app.get('/stock/[symbol]', function(req, res) {
-	//var s = req.body.symbol;
-	res.send('hello world');
-	/*tickers.forEach(function() {
-		if(tickers.symbol === s) {
-			return res.json(tickers.indexOf(s));
+app.get('/stock/:s', function(req, res) {
+	var s = req.params.s.toUpperCase();
+	for(var i = 0; i < tickers.length; i++) {
+		if(tickers[i].symbol === s) {
+			return res.json(tickers[i]);
 		}
-		else {
-			res.statusCode = 404;
-			return res.send('Error 404: Symbol not found');
-		}
-	});*/
-
-	
+	}
+	res.statusCode = 404;
+	return res.send('Error 404: Symbol not found');
 });
 
 // /stock/random: lists price from a random stock (from array)
 app.get('/stock/random', function(req, res) {
 	var id = Math.floor(Math.random() * tickers.length);
 	var s = tickers[id];
-
 	res.json(s);
 });
 
 // add a stock to the array
 app.post('/stock', function(req, res) {
 	if(!req.body.hasOwnProperty('symbol') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('price')) {
-    res.statusCode = 400;
-    return res.send('Error 400: Post syntax incorrect.');
-  }
+		res.statusCode = 400;
+		return res.send('Error 400: Post syntax incorrect.');
+	}
+	var s = req.body.symbol.toUpperCase();
+	var newStock = { symbol : s, name : req.body.name, price : req.body.price };
 
-  var newStock = { symbol : req.body.symbol, name : req.body.name, price : req.body.price };
-
-  tickers.push(newStock);
-  res.send('New stock added!');
+	for(var i = 0; i < tickers.length; i++) {
+		if(tickers[i].symbol === s) {
+			res.statusCode = 409;
+			return res.send('Error 409: Entry already exists');
+		}
+	}
+	tickers.push(newStock);
+	res.send('New stock added!');
 });
 
 // delete a stock from the array
-app.delete('stock/[symbol]', function(req, res) {
-	var s = req.body.symbol;
-	tickers.forEach(function() {
-		if(tickers.symbol === s) {
-			tickers.splice(req.params.symbol, 1);
-			res.send(req.params.symbol + 'sucessfully deleted');
-		}
-		else {
-			res.statusCode = 404;
-			return res.send('Error 404: Symbol not found');
-		}
-	});
-
+app.put('stock/:s', function(req, res) {
+	var s = req.params.s.toUpperCase();
+	var found = false;
 	
+	for(var i = 0; i < tickers.length; i++) {
+		if(tickers[i].symbol === s) {
+			found = true;
+			return res.send('success');
+		}
+	}
+	if(found === false) {
+		res.statusCode = 404;
+		return res.send('Error 404: Symbol not found');
+	}
 });
 
 app.listen(process.env.PORT || 3413);
