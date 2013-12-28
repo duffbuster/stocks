@@ -1,7 +1,7 @@
 {
-  "name": "stocks",
-  "version": "1.0.0",
-  "description": "A stock price getter",
+  "name": "Stockify",
+  "version": "0.0.1",
+  "description": "A stock price getter-thingy",
   "main": "server.js",
   "dependencies": {
     "express": "~3.4.7"
