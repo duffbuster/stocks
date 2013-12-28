@@ -2,11 +2,11 @@ var express = require('express');
 var app = express();
 
 var tickers = [
-	{ symbol : 'MSFT', name : 'Microsoft Corporation', price : 37.29},
-	{ symbol : 'AAPL', name : 'Apple Inc.', price : 560.09},
-	{ symbol : 'GOOG', name : 'Google Inc.', price : 1118.40},
-	{ symbol : 'AMZN', name : 'Amazon.com Inc.', price : 398.08},
-	{ symbol : 'FB', name : 'Facebook Inc.', price : 55.44}
+	{ symbol : 'MSFT', name : 'Microsoft Corporation', price : '37.29'},
+	{ symbol : 'AAPL', name : 'Apple Inc.', price : '560.09'},
+	{ symbol : 'GOOG', name : 'Google Inc.', price : '1118.40'},
+	{ symbol : 'AMZN', name : 'Amazon.com Inc.', price : '398.08'},
+	{ symbol : 'FB', name : 'Facebook Inc.', price : '55.44'}
 ];
 
 app.use(express.bodyParser());
@@ -42,12 +42,12 @@ app.get('/stock/random', function(req, res) {
 
 // add a stock to the array
 app.post('/stock', function(req, res) {
-	if(!req.body.hasOwnProperty('symbol') || !req.body.hasOwnProperty('name')) {
+	if(!req.body.hasOwnProperty('symbol') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('price')) {
     res.statusCode = 400;
     return res.send('Error 400: Post syntax incorrect.');
   }
 
-  var newStock = { symbol : req.body.symbol, name : req.body.name };
+  var newStock = { symbol : req.body.symbol, name : req.body.name, price : req.body.price };
 
   tickers.push(newStock);
   res.send('New stock added!');
