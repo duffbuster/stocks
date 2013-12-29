@@ -29,7 +29,7 @@ app.get('/stock/:s', function(req, res) {
 });
 
 // /stock/random: lists price from a random stock (from array)
-app.get('/stock/random', function(req, res) {
+app.get('/stock/random/', function(req, res) {
 	var id = Math.floor(Math.random() * tickers.length);
 	var s = tickers[id];
 	res.json(s);
