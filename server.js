@@ -9,7 +9,12 @@ var tickers = [
 	{ symbol : 'FB', name : 'Facebook Inc.', price : '55.44'}
 ];
 
-app.use(express.bodyParser());
+app.configure(function () {
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+	app.use(app.router);
+});
+
 
 // /stock: lists all stock prices (from array)
 app.get('/stock', function(req, res) {
@@ -55,20 +60,16 @@ app.post('/stock', function(req, res) {
 });
 
 // delete a stock from the array
-app.put('stock/:s', function(req, res) {
+app.delete('stock/:s', function(req, res) {
 	var s = req.params.s.toUpperCase();
-	var found = false;
 	
 	for(var i = 0; i < tickers.length; i++) {
 		if(tickers[i].symbol === s) {
-			found = true;
 			return res.send('success');
 		}
 	}
-	if(found === false) {
-		res.statusCode = 404;
-		return res.send('Error 404: Symbol not found');
-	}
+	res.statusCode = 404;
+	return res.send('Error 404: Symbol not found');
 });
 
 app.listen(process.env.PORT || 3413);
