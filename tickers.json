@@ -1,0 +1,5 @@
+{ "symbol" : "MSFT", "name" : "Microsoft Corporation", "price" : 37.29},
+{ "symbol" : "AAPL", "name" : "Apple Inc.", "price" : 560.09},
+{ "symbol" : "GOOG", "name" : "Google Inc.", "price" : 1118.40},
+{ "symbol" : "AMZN", "name" : "Amazon.com Inc.", "price" : 398.08},
+{ "symbol" : "FB", "name" : "Facebook Inc.", "price" : 55.44}
