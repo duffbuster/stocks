@@ -17,7 +17,7 @@ app.get('/stock', function(req, res) {
 });
 
 // /stock/[symbol]: gets current price for [symbol] (from array)
-app.get('/stock/:s', function(req, res) {
+app.get('/stocks/:s', function(req, res) {
 	var s = req.params.s.toUpperCase();
 	for(var i = 0; i < tickers.length; i++) {
 		if(tickers[i].symbol === s) {
