@@ -1,13 +1,13 @@
 var express = require('express');
 var app = express();
-var mongoose = reqire('mongoose');
+var mongoose = require('mongoose');
 var random = require('mongoose-random');
 
-require('express-mongoose');
+//require('express-mongoose');
 
-var models = require('./models');
-var routes = require('./routes');
-var middleware = require('./middleware');
+//var models = require('./models');
+//var routes = require('./routes');
+//var middleware = require('./middleware');
 
 mongoose.set('debug', true);
 
@@ -19,7 +19,7 @@ app.configure(function () {
     app.use(app.router);
 });
 
-var stock = new mongoose.Schema({
+var schema = new mongoose.Schema({
     symbol: {
         type: String,
         required: true,
@@ -39,11 +39,12 @@ var stock = new mongoose.Schema({
     }
 });
 
-stock.plugin(random);
+schema.plugin(random);
 
-var stockModel = mongoose.model('stockModel', stock);
+var stockModel = mongoose.model('stockModel', schema);
 
 // /stock: lists all stock prices (from database)
+// working
 app.get('/stock', function (req, res) {
     return stockModel.find(function (err, stocks) {
         if (!err)
@@ -54,11 +55,12 @@ app.get('/stock', function (req, res) {
 });
 
 // add a stock to the database
+// working
 app.post('/stock', function (req, res) {
     var stock;
     console.log("POST: ");
     console.log(req.body);
-    product = new stockModel({
+    stock = new stockModel({
         symbol: req.body.symbol.toUpperCase(),
         name: req.body.name,
         price: req.body.price
@@ -73,14 +75,17 @@ app.post('/stock', function (req, res) {
 });
 
 // /stock/random: lists price from a random stock (from database)
-app.get('/stock/random/', function (req, res) {
+app.get('/stocks/random', function (req, res) {
     return stockModel.findRandom(function (err, stock) {
-        if (err) throw err;
-        console.log(stock);
+        if (!err)
+            return res.send(stock);
+        else
+            return console.log(err);
     });
 });
 
 // UPDATE a stock by symbol
+// working
 app.put('/stock/:s', function (req, res) {
     var symbol = req.params.s.toUpperCase();
     return stockModel.findOne({
@@ -100,8 +105,9 @@ app.put('/stock/:s', function (req, res) {
 });
 
 // /stock/[symbol]: gets current price for [symbol] (from database)
+// working
 app.get('/stock/:s', function (req, res) {
-    var symbol = req.params.s;
+    var symbol = req.params.s.toUpperCase();
     return stockModel.findOne({
         'symbol': symbol
     }, function (err, stock) {
