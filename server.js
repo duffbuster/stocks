@@ -2,28 +2,6 @@ var express = require('express');
 var app = express();
 var MongoClient = require('mongodb').MongoClient;
 
-var tickers = [{
-    symbol: 'MSFT',
-    name: 'Microsoft Corporation',
-    price: '37.29'
-}, {
-    symbol: 'AAPL',
-    name: 'Apple Inc.',
-    price: '560.09'
-}, {
-    symbol: 'GOOG',
-    name: 'Google Inc.',
-    price: '1118.40'
-}, {
-    symbol: 'AMZN',
-    name: 'Amazon.com Inc.',
-    price: '398.08'
-}, {
-    symbol: 'FB',
-    name: 'Facebook Inc.',
-    price: '55.44'
-}];
-
 app.configure(function () {
     app.use(express.bodyParser());
     app.use(express.methodOverride());
