@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var mongoose = reqire('mongoose');
+var random = require('mongoose-random');
 
 require('express-mongoose');
 
@@ -38,7 +39,9 @@ var stock = new mongoose.Schema({
     }
 });
 
-var stockModel = mongoose.model('stock', stock);
+stock.plugin(random);
+
+var stockModel = mongoose.model('stockModel', stock);
 
 // /stock: lists all stock prices (from database)
 app.get('/stock', function (req, res) {
@@ -71,9 +74,10 @@ app.post('/stock', function (req, res) {
 
 // /stock/random: lists price from a random stock (from database)
 app.get('/stock/random/', function (req, res) {
-    var id = Math.floor(Math.random() * tickers.length);
-    var s = tickers[id];
-    res.json(s);
+    return stockModel.findRandom(function (err, stock) {
+        if (err) throw err;
+        console.log(stock);
+    });
 });
 
 // UPDATE a stock by ID
