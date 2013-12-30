@@ -36,25 +36,6 @@ app.get('/stock', function (req, res) {
     res.json(tickers);
 });
 
-// /stock/[symbol]: gets current price for [symbol] (from array)
-app.get('/stocks/:s', function (req, res) {
-    var s = req.params.s.toUpperCase();
-    for (var i = 0; i < tickers.length; i++) {
-        if (tickers[i].symbol === s) {
-            return res.json(tickers[i]);
-        }
-    }
-    res.statusCode = 404;
-    return res.send('Error 404: Symbol not found');
-});
-
-// /stock/random: lists price from a random stock (from array)
-app.get('/stock/random/', function (req, res) {
-    var id = Math.floor(Math.random() * tickers.length);
-    var s = tickers[id];
-    res.json(s);
-});
-
 // add a stock to the array
 app.post('/stock', function (req, res) {
     if (!req.body.hasOwnProperty('symbol') || !req.body.hasOwnProperty('name') || !req.body.hasOwnProperty('price')) {
@@ -76,6 +57,25 @@ app.post('/stock', function (req, res) {
     }
     tickers.push(newStock);
     res.send('New stock added!');
+});
+
+// /stock/random: lists price from a random stock (from array)
+app.get('/stock/random/', function (req, res) {
+    var id = Math.floor(Math.random() * tickers.length);
+    var s = tickers[id];
+    res.json(s);
+});
+
+// /stock/[symbol]: gets current price for [symbol] (from array)
+app.get('/stock/:s', function (req, res) {
+    var s = req.params.s.toUpperCase();
+    for (var i = 0; i < tickers.length; i++) {
+        if (tickers[i].symbol === s) {
+            return res.json(tickers[i]);
+        }
+    }
+    res.statusCode = 404;
+    return res.send('Error 404: Symbol not found');
 });
 
 // delete a stock from the array
