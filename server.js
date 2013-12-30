@@ -72,7 +72,7 @@ app.post('/stock', function (req, res) {
     return res.send(stock);
 });
 
-// /stock/random: lists price from a srandom stock (from database)
+// /stock/random: lists price from a random stock (from database)
 app.get('/stock/random/', function (req, res) {
     return stockModel.findRandom(function (err, stock) {
         if (err) throw err;
@@ -80,9 +80,12 @@ app.get('/stock/random/', function (req, res) {
     });
 });
 
-// UPDATE a stock by ID
+// UPDATE a stock by symbol
 app.put('/stock/:s', function (req, res) {
-    return stockModel.findById(req.params.s, function (err, stock) {
+    var symbol = req.params.s.toUpperCase();
+    return stockModel.findOne({
+        'symbol': symbol
+    }, function (err, stock) {
         stock.symbol = req.body.symbol.toUpperCase();
         stock.name = req.body.name;
         stock.price = req.body.price;
@@ -98,27 +101,31 @@ app.put('/stock/:s', function (req, res) {
 
 // /stock/[symbol]: gets current price for [symbol] (from database)
 app.get('/stock/:s', function (req, res) {
-    var s = req.params.s.toUpperCase();
-    for (var i = 0; i < tickers.length; i++) {
-        if (tickers[i].symbol === s) {
-            return res.json(tickers[i]);
-        }
-    }
-    res.statusCode = 404;
-    return res.send('Error 404: Symbol not found');
+    var symbol = req.params.s;
+    return stockModel.findOne({
+        'symbol': symbol
+    }, function (err, stock) {
+        if (!err)
+            return res.json(stock);
+        else
+            return console.log(err);
+    });
 });
 
 // delete a stock from the database
 app.delete('stock/:s', function (req, res) {
-    var s = req.params.s.toUpperCase();
-
-    for (var i = 0; i < tickers.length; i++) {
-        if (tickers[i].symbol === s) {
-            return res.send('success');
-        }
-    }
-    res.statusCode = 404;
-    return res.send('Error 404: Symbol not found');
+    var symbol = req.params.s.toUpperCase();
+    return stockModel.findOne({
+        'symbol': symbol
+    }, function (err, stock) {
+        return stock.remove(function (err) {
+            if (!err) {
+                console.log('removed');
+                return res.send('');
+            } else
+                console.log(err);
+        });
+    });
 });
 
 app.listen(process.env.PORT || 3413);
