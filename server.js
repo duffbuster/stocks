@@ -48,7 +48,7 @@ var stockModel = mongoose.model('stockModel', schema);
 app.get('/stock', function (req, res) {
     return stockModel.find(function (err, stocks) {
         if (!err)
-            return res.send(stocks);
+            return res.json(stocks);
         else
             return console.log(err);
     });
@@ -76,11 +76,26 @@ app.post('/stock', function (req, res) {
 
 // /stock/random: lists price from a random stock (from database)
 app.get('/stocks/random', function (req, res) {
-    return stockModel.count(function (err, count) {
-        if (err)
+    stockModel.count(function (err, count) {
+        if (err) {
             console.log(err);
+            res.send(500);
+            return;
+        }
+
         var rand = Math.floor(Math.random() * count);
-        return res.send(stockModel.findOne().skip(rand));
+
+        stockModel.find({}, {}, {
+            skip: rand,
+            limit: 1
+        }, function (subErr, result) {
+            if (subErr) {
+                res.send(500);
+                return;
+            }
+
+            res.json(result); // probably an array, but should have a random result.
+        });
     });
 });
 
