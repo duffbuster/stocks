@@ -1,6 +1,26 @@
 var express = require('express');
 var app = express();
-var MongoClient = require('mongodb').MongoClient;
+var mongoose = reqire('mongoose');
+
+require('express-mongoose');
+
+var models = require('./models');
+var routes = require('./routes');
+var middleware = require('./middleware');
+
+var schema = mongoose.Schema({
+    symbol: {
+        type: String,
+    },
+    name: {
+        type: String
+    },
+    price: {
+        type: Number
+    }
+});
+
+mongoose.set('debug', true);
 
 app.configure(function () {
     app.use(express.bodyParser());
