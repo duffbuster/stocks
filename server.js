@@ -76,11 +76,11 @@ app.post('/stock', function (req, res) {
 
 // /stock/random: lists price from a random stock (from database)
 app.get('/stocks/random', function (req, res) {
-    return stockModel.findRandom(function (err, stock) {
-        if (!err)
-            return res.send(stock);
-        else
-            return console.log(err);
+    return stockModel.count(function (err, count) {
+        if (err)
+            console.log(err);
+        var rand = Math.floor(Math.random() * count);
+        return res.send(stockModel.findOne().skip(rand));
     });
 });
 
