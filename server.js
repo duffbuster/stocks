@@ -18,9 +18,7 @@ app.configure(function () {
     app.use(app.router);
 });
 
-var schema = mongoose.Schema;
-
-var stock = new Schema({
+var stock = new mongoose.Schema({
     symbol: {
         type: String,
         required: true,
@@ -80,12 +78,12 @@ app.get('/stock/random/', function (req, res) {
 
 // UPDATE a stock by ID
 app.put('/stock/:s', function (req, res) {
-    return stockModel.findById(req.params.s, function(err, stock) {
+    return stockModel.findById(req.params.s, function (err, stock) {
         stock.symbol = req.body.symbol.toUpperCase();
         stock.name = req.body.name;
         stock.price = req.body.price;
-        return stock.save(function(err) {
-            if(!err)
+        return stock.save(function (err) {
+            if (!err)
                 console.log("updated");
             else
                 console.log(err);

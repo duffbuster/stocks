@@ -1,11 +1,12 @@
 {
   "name": "Stockify",
-  "version": "0.0.1",
-  "description": "A stock price getter-thingy",
+  "version": "0.0.0",
+  "description": "A stock ticker getter thingy",
   "main": "server.js",
   "dependencies": {
-    "express": "~3.4.7"
-    "mongoose": "~3.8.3"
+    "express": "~3.4.7",
+    "mongoose": "~3.8.3",
+    "mongoose-random": "~0.0.2"
   },
   "devDependencies": {},
   "scripts": {
