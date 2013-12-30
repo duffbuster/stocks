@@ -72,7 +72,7 @@ app.post('/stock', function (req, res) {
     return res.send(stock);
 });
 
-// /stock/random: lists price from a random stock (from database)
+// /stock/random: lists price from a srandom stock (from database)
 app.get('/stock/random/', function (req, res) {
     return stockModel.findRandom(function (err, stock) {
         if (err) throw err;
