@@ -7,6 +7,7 @@
     "express": "~3.4.7",
     "mongoose": "~3.8.3",
     "mongoose-random": "~0.0.2"
+    "q": "~0.9.7"
   },
   "devDependencies": {},
   "scripts": {
