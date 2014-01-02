@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var random = require('mongoose-random');
+var http = require('http');
+var yql_url = "http://query.yahooapis.com/v1/public/yql";
+var startDate = '2013-01-01';
+var endDate = '2014-01-01';
 
 //require('express-mongoose');
 
@@ -9,9 +12,9 @@ var random = require('mongoose-random');
 //var routes = require('./routes');
 //var middleware = require('./middleware');
 
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
-mongoose.connect('mongodb://localhost/tickers');
+//mongoose.connect('mongodb://localhost/tickers');
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -38,8 +41,6 @@ var schema = new mongoose.Schema({
         default: Date.now
     }
 });
-
-schema.plugin(random);
 
 var stockModel = mongoose.model('stockModel', schema);
 
@@ -122,7 +123,7 @@ app.put('/stock/:s', function (req, res) {
 // /stock/[symbol]: gets current price for [symbol] (from database)
 // working
 app.get('/stock/:s', function (req, res) {
-    var symbol = req.params.s.toUpperCase();
+    /*var symbol = req.params.s.toUpperCase();
     return stockModel.findOne({
         'symbol': symbol
     }, function (err, stock) {
@@ -130,6 +131,20 @@ app.get('/stock/:s', function (req, res) {
             return res.json(stock);
         else
             return console.log(err);
+    });*/
+    var symbol = req.params.s.toUpperCase();
+    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
+    http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
+        console.log("Got response: " + res.statusCode);
+        var body ="";
+        result.on("data", function(chunk) {
+            body += chunk;
+        });
+        result.on("end", function () {
+            res.json(body);
+        });
+    }).on('error', function (e) {
+        console.log("Got error: " + e.message);
     });
 });
 
