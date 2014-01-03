@@ -136,12 +136,21 @@ app.get('/stock/:s', function (req, res) {
     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
     http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
         console.log("Got response: " + res.statusCode);
-        var body ="";
-        result.on("data", function(chunk) {
+        var body = "";
+        var symbol = query.results.quote.symbol;
+        result.on("data", function (chunk) {
             body += chunk;
         });
         result.on("end", function () {
-            res.json(body);
+            //console.log(body);
+
+            //var stock = result.query.results.quote;
+            /*var symbol = query.results.quote.symbol;
+            var price = body.AskRealTime;
+            console.log('Symbol: ' + symbol);
+            console.log('Current Price: $' + price);*/
+
+            //res.json(body);
         });
     }).on('error', function (e) {
         console.log("Got error: " + e.message);
