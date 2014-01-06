@@ -79,14 +79,24 @@ app.post('/stock', function (req, res) {
 });
 
 app.put('/stock', function (req, res) {
+    var stockSymbols;
+    var stockUpdates = {};
+
     // get stocks from the db
+    stockModel.find(function (err, stocks) {
+        if (err)
+            return console.log(err);
+        else {
+            stocks.forEach(function(stock) {
+                stockSymbols.concat('"' + stock.symbol + '",');
+            });
+        }
+    });
 
     // assemble the yql url
+    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in (" + stockSymbols + ")");
 
-    // get the live prices
-
-    // update the database
-    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
+    // parse out the live prices
     http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
         console.log("Got response: " + res.statusCode);
         var body = "";
@@ -105,6 +115,9 @@ app.put('/stock', function (req, res) {
     }).on('error', function (e) {
         console.log("Got error: " + e.message);
     });
+
+    // update the database
+    
 });
 
 // /stock/random: lists price from a random stock (from database)
