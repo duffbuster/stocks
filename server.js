@@ -6,15 +6,11 @@ var yql_url = "http://query.yahooapis.com/v1/public/yql";
 var startDate = '2013-01-01';
 var endDate = '2014-01-01';
 
-//require('express-mongoose');
+require('express-mongoose');
 
-//var models = require('./models');
-//var routes = require('./routes');
-//var middleware = require('./middleware');
+mongoose.set('debug', true);
 
-//mongoose.set('debug', true);
-
-//mongoose.connect('mongodb://localhost/tickers');
+mongoose.connect('mongodb://localhost/tickers');
 
 app.configure(function () {
     app.use(express.bodyParser());
