@@ -49,7 +49,7 @@ describe('Routing', function () {
                 done();
             });
         });
-        it('should correctly update an existing account', function (done) {
+        it('should correctly update an existing stock', function (done) {
             var update = {
                 symbol: 'XOM',
                 name: 'Exxon Mobile Corporation',
