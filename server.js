@@ -2,11 +2,9 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var config = require('./Config-debug');
+var http = require('http');
+var yql_url = "http://query.yahooapis.com/v1/public/yql";
 
-//var http = require('http');
-/*var yql_url = "http://query.yahooapis.com/v1/public/yql";
-var startDate = '2013-01-01';
-var endDate = '2014-01-01';*/
 
 require('express-mongoose');
 
@@ -41,7 +39,6 @@ var schema = new mongoose.Schema({
 });
 
 var stockModel = mongoose.model('stockModel', schema);
-
 // /stock: lists all stock prices (from database)
 // working
 app.get('/stock', function (req, res) {
@@ -82,7 +79,13 @@ app.post('/stock', function (req, res) {
 });
 
 app.put('/stock', function (req, res) {
-    /*var symbol = req.params.s.toUpperCase();
+    // get stocks from the db
+
+    // assemble the yql url
+
+    // get the live prices
+
+    // update the database
     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
     http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
         console.log("Got response: " + res.statusCode);
@@ -101,7 +104,7 @@ app.put('/stock', function (req, res) {
         });
     }).on('error', function (e) {
         console.log("Got error: " + e.message);
-    });*/
+    });
 });
 
 // /stock/random: lists price from a random stock (from database)
