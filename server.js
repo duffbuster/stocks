@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var http = require('http');
-var yql_url = "http://query.yahooapis.com/v1/public/yql";
+
+
+/*var yql_url = "http://query.yahooapis.com/v1/public/yql";
 var startDate = '2013-01-01';
-var endDate = '2014-01-01';
+var endDate = '2014-01-01';*/
 
 require('express-mongoose');
 
@@ -119,7 +121,7 @@ app.put('/stock/:s', function (req, res) {
 // /stock/[symbol]: gets current price for [symbol] (from database)
 // working
 app.get('/stock/:s', function (req, res) {
-    /*var symbol = req.params.s.toUpperCase();
+    var symbol = req.params.s.toUpperCase();
     return stockModel.findOne({
         'symbol': symbol
     }, function (err, stock) {
@@ -127,8 +129,8 @@ app.get('/stock/:s', function (req, res) {
             return res.json(stock);
         else
             return console.log(err);
-    });*/
-    var symbol = req.params.s.toUpperCase();
+    });
+    /*var symbol = req.params.s.toUpperCase();
     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
     http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
         console.log("Got response: " + res.statusCode);
@@ -147,7 +149,7 @@ app.get('/stock/:s', function (req, res) {
         });
     }).on('error', function (e) {
         console.log("Got error: " + e.message);
-    });
+    });*/
 });
 
 // delete a stock from the database
