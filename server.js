@@ -81,6 +81,29 @@ app.post('/stock', function (req, res) {
     return res.send(stock);
 });
 
+app.put('/stock', function (req, res) {
+    /*var symbol = req.params.s.toUpperCase();
+    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
+    http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
+        console.log("Got response: " + res.statusCode);
+        var body = "";
+        result.on("data", function (chunk) {
+            body += chunk;
+        });
+        result.on("end", function () {
+            var bodyObject = JSON.parse(body);
+
+            var stock = bodyObject.query.results.quote;
+            var price = stock.Ask;
+            console.log('Symbol: ' + symbol);
+            console.log('Current Price: $' + price);
+            res.send('Symbol: ' + symbol + '\n' + 'Current Price: $' + price);
+        });
+    }).on('error', function (e) {
+        console.log("Got error: " + e.message);
+    });*/
+});
+
 // /stock/random: lists price from a random stock (from database)
 app.get('/stocks/random', function (req, res) {
     stockModel.count(function (err, count) {
@@ -138,26 +161,6 @@ app.get('/stock/:s', function (req, res) {
         else
             return console.log(err);
     });
-    /*var symbol = req.params.s.toUpperCase();
-    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
-    http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
-        console.log("Got response: " + res.statusCode);
-        var body = "";
-        result.on("data", function (chunk) {
-            body += chunk;
-        });
-        result.on("end", function () {
-            var bodyObject = JSON.parse(body);
-
-            var stock = bodyObject.query.results.quote;
-            var price = stock.Ask;
-            console.log('Symbol: ' + symbol);
-            console.log('Current Price: $' + price);
-            res.send('Symbol: ' + symbol + '\n' + 'Current Price: $' + price);
-        });
-    }).on('error', function (e) {
-        console.log("Got error: " + e.message);
-    });*/
 });
 
 // delete a stock from the database
