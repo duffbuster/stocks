@@ -1,9 +1,9 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var http = require('http');
+var config = require('./Config-debug');
 
-
+//var http = require('http');
 /*var yql_url = "http://query.yahooapis.com/v1/public/yql";
 var startDate = '2013-01-01';
 var endDate = '2014-01-01';*/
@@ -12,7 +12,7 @@ require('express-mongoose');
 
 mongoose.set('debug', true);
 
-mongoose.connect('mongodb://localhost/tickers');
+mongoose.connect(config.db.mongodb);
 
 app.configure(function () {
     app.use(express.bodyParser());
@@ -63,6 +63,14 @@ app.post('/stock', function (req, res) {
         symbol: req.body.symbol.toUpperCase(),
         name: req.body.name,
         price: req.body.price
+    });
+    stockModel.findOne({
+        'symbol': stock.symbol
+    }, function (err, stock) {
+        if (!err) {
+            res.send(400);
+            return console.log("Entry already exists");
+        }
     });
     stock.save(function (err) {
         if (!err)
