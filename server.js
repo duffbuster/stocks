@@ -125,7 +125,6 @@ app.put('/stock', function (req, res) {
         stockModel.findOne({
             'symbol': symbol
         }, function (err, stock) {
-            stock.symbol = symbol;
             stock.price = price;
             stock.save(function (err) {
                 if (!err)
