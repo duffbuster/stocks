@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
-var config = require('./Config-debug');
+var config = require('./config');
 var http = require('http');
 var yql_url = "http://query.yahooapis.com/v1/public/yql";
 
