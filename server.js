@@ -79,16 +79,17 @@ app.post('/stock', function (req, res) {
 });
 
 app.put('/stock', function (req, res) {
-    var dbSymbols;
-
     // get stocks from the db
     stockModel.find(function (err, stocks) {
         if (err)
             return console.log(err);
         else {
-            stocks.forEach(function (stock) {
-                dbSymbols.concat('"' + stock.symbol + '",');
-            });
+            var dbSymbols = '';
+            for (var i = 0; i < stocks.length; i++) {
+                console.log(i);
+                dbSymbols += '"' + stocks[i].symbol + '",';
+            }
+            //console.log(dbSymbols);
             findUpdates(dbSymbols);
         }
     });
