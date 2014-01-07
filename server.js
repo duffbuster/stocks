@@ -65,7 +65,7 @@ app.post('/stock', function (req, res) {
         'symbol': stock.symbol
     }, function (err, stock) {
         if (!err) {
-            res.send(400);
+            res.statusCode = 400;
             return console.log("Entry already exists");
         }
     });
@@ -80,20 +80,20 @@ app.post('/stock', function (req, res) {
 
 app.put('/stock', function (req, res) {
     var stockSymbols;
-    var stockUpdates = {};
 
     // get stocks from the db
     stockModel.find(function (err, stocks) {
         if (err)
             return console.log(err);
         else {
-            stocks.forEach(function(stock) {
+            stocks.forEach(function (stock) {
                 stockSymbols.concat('"' + stock.symbol + '",');
             });
         }
     });
 
     // assemble the yql url
+    stockSymbols.slice(',', -1);
     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in (" + stockSymbols + ")");
 
     // parse out the live prices
@@ -105,19 +105,32 @@ app.put('/stock', function (req, res) {
         });
         result.on("end", function () {
             var bodyObject = JSON.parse(body);
-
-            var stock = bodyObject.query.results.quote;
-            var price = stock.Ask;
-            console.log('Symbol: ' + symbol);
-            console.log('Current Price: $' + price);
-            res.send('Symbol: ' + symbol + '\n' + 'Current Price: $' + price);
+            var totalReturned = bodyObject.query.count;
+            for (var i = 0; i < totalReturned; i++) {
+                var upStock = bodyObject.query.results.quote[i];
+                update(upStock.symbol, upStock.Ask);
+            }
         });
     }).on('error', function (e) {
         console.log("Got error: " + e.message);
     });
 
     // update the database
-    
+    var update = function (symbol, price) {
+        stockModel.findOne({
+            'symbol': symbol
+        }, function (err, stock) {
+            stock.symbol = symbol;
+            stock.price = price;
+            stock.save(function (err) {
+                if (!err)
+                    console.log(symbol + " updated");
+                else
+                    return console.log(err);
+                res.send(stock);
+            });
+        });
+    };
 });
 
 // /stock/random: lists price from a random stock (from database)
