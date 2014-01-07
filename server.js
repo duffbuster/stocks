@@ -79,7 +79,7 @@ app.post('/stock', function (req, res) {
 });
 
 app.put('/stock', function (req, res) {
-    var stockSymbols;
+    var dbSymbols;
 
     // get stocks from the db
     stockModel.find(function (err, stocks) {
@@ -87,33 +87,37 @@ app.put('/stock', function (req, res) {
             return console.log(err);
         else {
             stocks.forEach(function (stock) {
-                stockSymbols.concat('"' + stock.symbol + '",');
+                dbSymbols.concat('"' + stock.symbol + '",');
             });
+            findUpdates(dbSymbols);
         }
     });
 
-    // assemble the yql url
-    stockSymbols.slice(',', -1);
-    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in (" + stockSymbols + ")");
+    var findUpdates = function (symbols) {
+        // assemble the yql url
+        var stockSymbols = symbols.slice(',', -1);
+        var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in (" + stockSymbols + ")");
 
-    // parse out the live prices
-    http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
-        console.log("Got response: " + res.statusCode);
-        var body = "";
-        result.on("data", function (chunk) {
-            body += chunk;
+        // parse out the live prices
+        http.get(yql_url + "?q=" + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", function (result) {
+            console.log("Got response: " + res.statusCode);
+            var body = "";
+            result.on("data", function (chunk) {
+                body += chunk;
+            });
+            result.on("end", function () {
+                var bodyObject = JSON.parse(body);
+                var totalReturned = bodyObject.query.count;
+                for (var i = 0; i < totalReturned; i++) {
+                    var upStock = bodyObject.query.results.quote[i];
+                    update(upStock.symbol, upStock.Ask);
+                }
+            });
+        }).on('error', function (e) {
+            return console.log("Got error: " + e.message);
         });
-        result.on("end", function () {
-            var bodyObject = JSON.parse(body);
-            var totalReturned = bodyObject.query.count;
-            for (var i = 0; i < totalReturned; i++) {
-                var upStock = bodyObject.query.results.quote[i];
-                update(upStock.symbol, upStock.Ask);
-            }
-        });
-    }).on('error', function (e) {
-        console.log("Got error: " + e.message);
-    });
+    };
+
 
     // update the database
     var update = function (symbol, price) {
